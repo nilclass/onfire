@@ -222,6 +222,18 @@ class OnfireTest < Test::Unit::TestCase
       assert_equal [], @obj.list
     end
 
+    context "With some payload given as the last argument" do
+      setup { @obj.on :click do |event| @obj.list << event.data end }
+
+      should "Make that data accessible in the handler through it's event" do
+        data = { :user => { :defined => ['data'] }, :with => [{'no' => 'special'}, {'meaning' => 'to'}], :onfire => '.' }
+
+        @obj.fire :click, data
+
+        assert_equal [data], @obj.list
+      end
+    end
+
     should "invoke the attached matching handler" do
       @obj.on :click do @obj.list << 1 end
       @obj.fire :click
